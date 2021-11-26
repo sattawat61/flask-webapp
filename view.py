@@ -11,8 +11,8 @@ app.register_blueprint(user)
 
 @app.route("/")
 def Index():
-    return "This is home"
-    #return render_template('index.html',headername="แสดงข้อมูลสมาชิก")
+    # return "This is home"
+    return render_template('login.html',headername="Login เข้าใช้งานระบบ")
 
 if __name__ == '__main__':
     app.run(debug = True)

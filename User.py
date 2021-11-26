@@ -5,6 +5,11 @@ from config import *
 con = pymysql.connect(HOST,USER,PASS,DATABASE)
 user = Blueprint('user',__name__)
 
+@user.route("/live")
+def live():
+        return render_template("live.html",headername="Login เข้าใช้งานระบบ")
+
+
 @user.route("/loginpage")
 def Loginpage():
     if "username" not in session:
