@@ -1,0 +1,270 @@
+{% extends "layout.html" %}
+{% block content %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Add a gray background color with some padding */
+    /* body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f1f1f1;
+    } */
+
+    /* Header/Blog Title */
+    /* .header {
+      padding: 30px;
+      font-size: 40px;
+      text-align: center;
+      background: white;
+    } */
+
+    /* Create two unequal columns that floats next to each other */
+    /* Left column */
+    .leftcolumn {
+      float: left;
+      width: 50%;
+      padding-right: 0px;
+
+    }
+
+    /* Right column */
+    .rightcolumn {
+      float: left;
+      width: 49%;
+      padding: 0px;
+
+    }
+
+    /* Fake image */
+    /* .fakeimg {
+      background-color: #aaa;
+      width: 100%;
+      padding: 20px;
+    } */
+
+    /* Add a card effect for articles */
+    .card {
+      background-color: white;
+      padding: 20px;
+      margin-left: 10px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 20px;
+      text-align: center;
+      background: #ddd;
+      margin-top: 20px;
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 800px) {
+
+      .leftcolumn,
+      .rightcolumn {
+        width: 100%;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="row">
+    <div class="leftcolumn">
+      <div class="card">
+        <h2>TITLE HEADING</h2>
+        <h5>Title description, Dec 7, 2017</h5>
+        <div class="fakeimg" style="height: 600px;;">Image</div>
+        <p>Some text..</p>
+        <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+      </div>
+    </div>
+    <div class="rightcolumn">
+      <div class="card">
+        <div class="container">
+          <h1 align='center'>{{headername}}</h1>
+          <h5 align="right">ยินดีต้อนรับคุณ {{ session['Firstname'] }} {{ session['Firstname'] }}</h5>
+          <h5 align="right"><a href="/logout">Logout</a></h5>
+
+          <form action="{{ url_for ('member.Showwithdate') }}" method="POST">
+            <div class="form-row align-item-center">
+              <div class="col">
+                <input type="datetime-local" class="form-control" name='dtstart' required>
+              </div>
+
+              <div class="col">
+                <input type="datetime-local" class="form-control" name='dtend' required>
+              </div>
+
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary">แสดงข้อมูล</button>
+              </div>
+              <div class="col-auto">
+                <a href="/showmember" class="btn btn-success">แสดงทั้งหมด</a>
+              </div>
+            </div>
+            <br>
+          </form>
+          <table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Firstname</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">Email</th>
+                <th scope="col">Timestamp</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in datas %}
+              <tr>
+                <td>{{ row.0 }}</td>
+                <td>{{ row.1 }}</td>
+                <td>{{ row.2 }}</td>
+                <td>{{ row.3 }}</td>
+                <td>{{ row.4 }}</td>
+                <td>
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalshow{{row.0}}">เเสดงข้อมูล</button>
+                  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal{{row.0}}">แก้ไข</button>
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModaledit{{row.0}}">ลบ</button>
+                </td>
+              </tr>
+              <!-- model update -->
+              <div class="modal fade" id="exampleModal{{row.0}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">แก้ไขข้อมูล</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ url_for('member.Editmember') }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                          <input type="hidden" class="form-control" value="{{ row.0 }}" name="id">
+                        </div>
+                        <div class="form-group">
+                          <label for="recipient-name" class="col-form-label">Firstname:</label>
+                          <input type="text" class="form-control" value="{{ row.1 }}" name="fname" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="recipient-name" class="col-form-label">Lastname:</label>
+                          <input type="text" class="form-control" value="{{ row.2 }}" name="lname" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="recipient-name" class="col-form-label">Email:</label>
+                          <input type="email" class="form-control" value="{{ row.3 }}" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                          <input type='file' name='files' class="imgInp" accept="image/x-png,image/gif,image/jpeg"  onchange="readURL(this);">
+                          <img id="blah" src="{{row.5}}" alt="" class="img-thumbnail" />
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">อัพเดตข้อมูล</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ลบ -->
+              <div class="modal fade" id="exampleModaledit{{row.0}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">ยืนยันการลบ</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form action="{{ url_for('member.Delmember') }}" method="POST">
+                      <div class="modal-body">
+                        <h3>คุณต้องการลบข้อมูลของ {{ row.1 }} {{ row.2 }} หรือไม่</h3>
+                      </div>
+                      <input type="hidden" name="id" value="{{row.0}}">
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">ยืนยันการลบ</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- แสดงบางคน -->
+              <div class="modal fade" id="exampleModalshow{{row.0}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">แสดงข้อมูล</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form action="{{ url_for('member.Showsomeone') }}" method="POST">
+                      <div class="modal-body">
+                        <h3>คุณต้องการเเสดงข้อมูลของ {{ row.1 }} {{ row.2 }} หรือไม่</h3>
+                      </div>
+                      <input type="hidden" name="id" value="{{row.0}}">
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="submit" class="btn btn-primary">ยืนยันการแสดงข้อมูล</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              {% endfor %}
+            </tbody>
+          </table>
+          <a href="/adddatamember" class="btn btn-success">เพิ่มข้อมูล</a>
+        </div>
+        <script>
+          function readURL(input) {
+            if (input.files && input.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                $(input).parent().find('.img-thumbnail')
+                  .attr('src', e.target.result)
+              };
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+        </script>
+      
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+      </div>
+    </div>
+  </div>
+</body>
+
+
+</html>
+{% endblock %}
