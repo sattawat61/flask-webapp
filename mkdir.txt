@@ -1,1 +1,7 @@
+<<<<<<< HEAD
+workon faceweb
+อันเก่า tensorflow == 1.13.1
+อันใหม่ temsorflow == 2.6.2
+=======
 workon login
+>>>>>>> 676728eb719120ba537b592913578efa8d88ef5f
